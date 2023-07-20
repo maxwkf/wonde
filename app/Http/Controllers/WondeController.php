@@ -47,8 +47,8 @@ class WondeController extends Controller
 
         return view('wonde', [
             'allEmployees' => $allEmployees,
-            'targetEmployee' => $targetEmployee,
-            'classes' => $classes
+            'targetEmployee' => $targetEmployee ?? null,
+            'classes' => $classes ?? null
         ]);
     }
 
