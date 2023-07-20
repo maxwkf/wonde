@@ -6,7 +6,7 @@
         @if ($allEmployees)
 
         @foreach($allEmployees as $employee)
-            <option value="{{ $employee->id }}" {{ $targetEmployee == $employee->id ? 'selected="selected"' : '' }}>{{ $employee->title }} {{ $employee->forename }} {{ $employee->surname }}</option>
+            <option value="{{ $employee->id }}" {{ $targetEmployee->id == $employee->id ? 'selected="selected"' : '' }}>{{ $employee->title }} {{ $employee->forename }} {{ $employee->surname }}</option>
         @endforeach
 
     @endif
