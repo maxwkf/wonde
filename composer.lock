@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aa322c53454393ed775cfe4807d54a50",
+    "content-hash": "faec6ab17dddb61ca061d4eb3b7e8382",
     "packages": [
         {
             "name": "brick/math",
@@ -5505,6 +5505,53 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.11.0"
             },
             "time": "2022-06-03T18:03:27+00:00"
+        },
+        {
+            "name": "wondeltd/php-client",
+            "version": "3.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wondeltd/php-client.git",
+                "reference": "5e2856c3d00dcfebbd32626e154a5cbc6ac5c62b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wondeltd/php-client/zipball/5e2856c3d00dcfebbd32626e154a5cbc6ac5c62b",
+                "reference": "5e2856c3d00dcfebbd32626e154a5cbc6ac5c62b",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.2.0",
+                "php": "^7.2.5 || ^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Wonde\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Philip Clifton",
+                    "email": "pclifton@wonde.com"
+                }
+            ],
+            "description": "PHP Client for Wonde",
+            "keywords": [
+                "wonde"
+            ],
+            "support": {
+                "issues": "https://github.com/wondeltd/php-client/issues",
+                "source": "https://github.com/wondeltd/php-client/tree/3.1.1"
+            },
+            "time": "2022-04-08T16:30:29+00:00"
         }
     ],
     "packages-dev": [
