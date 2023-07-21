@@ -47,41 +47,48 @@ class WondeController extends Controller
             return view('wonde', $basicResultSet);
         }
 
-        // calculate a week period        
-        $startDatetime = Carbon::createFromFormat('Y-m-d', request()->get('fromDate'))->format('Y-m-d 00:00:00');
-        $endDatetime = Carbon::createFromFormat('Y-m-d', request()->get('fromDate'))->addDays(7)->format('Y-m-d 00:00:00');
 
-        // retrieve lessons for that week
-        // ❓ I can see that the start_at and end_at inside lesson is different from that of period start_time and end_time
-        // Timezone handling maybe required
-        $lessons = $this->_school->lessons->all(['class', 'period', 'employee'], ['lessons_start_after' => $startDatetime, 'lessons_start_before' => $endDatetime]);
+        $resultSet = Cache::remember('resultSet_' . request()->get('fromDate') . "_" . request()->get('employeeId'), $this->_cacheSeconds, function () {
 
-        // filter lessons by employeeId
-        // cannot use array_filter as lessons is ResultIterator object
-        $lessonsTaughtByTeacher = [];
-        foreach($lessons as $lesson) {
-            // it is weird that the lesson does not contain employee_id that specified in https://docs.wonde.com/docs/api/sync#lesson-object
 
-            if ($lesson->employee?->data->id == request()->get('employeeId'))
-            $lessonsTaughtByTeacher[] = $lesson;
-        }
-        
-        // putting lessons in format for output
-        $resultSet = [];
-        $count = 0;
-        foreach($lessonsTaughtByTeacher as $lesson) {
-            if ($lesson->period->data->day && $lesson->employee) {
-                $count++;
-                
-                $resultSet['dayOfWeek'][$lesson->period->data->day][] = [
-                    'lesson' => $lesson,
-                    'period' => $lesson->period->data,
-                    'employee' => $lesson->employee->data,
-                    'class' => $lesson->class->data,
-                    'students' => $this->_school->classes->get($lesson->class->data->id, ['students'])?->students?->data
-                ];
+            // calculate a week period        
+            $startDatetime = Carbon::createFromFormat('Y-m-d', request()->get('fromDate'))->format('Y-m-d 00:00:00');
+            $endDatetime = Carbon::createFromFormat('Y-m-d', request()->get('fromDate'))->addDays(7)->format('Y-m-d 00:00:00');
+
+
+            // retrieve lessons for that week
+            // ❓ I can see that the start_at and end_at inside lesson is different from that of period start_time and end_time
+            // Timezone handling maybe required
+            $lessons = $this->_school->lessons->all(['class', 'period', 'employee'], ['lessons_start_after' => $startDatetime, 'lessons_start_before' => $endDatetime]);
+
+            // filter lessons by employeeId
+            // cannot use array_filter as lessons is ResultIterator object
+            $lessonsTaughtByTeacher = [];
+            foreach($lessons as $lesson) {
+                // it is weird that the lesson does not contain employee_id that specified in https://docs.wonde.com/docs/api/sync#lesson-object
+
+                if ($lesson->employee?->data->id == request()->get('employeeId'))
+                $lessonsTaughtByTeacher[] = $lesson;
             }
-        }
+            
+            // putting lessons in format for output
+            $result = [];
+            $count = 0;
+            foreach($lessonsTaughtByTeacher as $lesson) {
+                if ($lesson->period->data->day && $lesson->employee) {
+                    $count++;
+                    
+                    $result['dayOfWeek'][$lesson->period->data->day][] = [
+                        'lesson' => $lesson,
+                        'period' => $lesson->period->data,
+                        'employee' => $lesson->employee->data,
+                        'class' => $lesson->class->data,
+                        'students' => $this->_school->classes->get($lesson->class->data->id, ['students'])?->students?->data
+                    ];
+                }
+            }
+            return $result;
+        });
         
         return view('wonde', array_merge($basicResultSet, $resultSet));
     }
